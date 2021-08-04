@@ -92,8 +92,12 @@ class RegIns {
     var operatore;
     var ultimoIndice;
     if (occorrenze) {
-      operatore = occorrenze[occorrenze.length - 1];
-      ultimoIndice = espressione.lastIndexOf(operatore);
+      if(occorrenze.length === 1 && espressione[0] === "-") {
+        ultimoIndice = 1;
+      } else {
+        operatore = occorrenze[occorrenze.length - 1];
+        ultimoIndice = espressione.lastIndexOf(operatore);
+      }
     } else {
       ultimoIndice = 1;
     }
