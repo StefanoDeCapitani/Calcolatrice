@@ -10,11 +10,17 @@ class Espressione {
       var infissa = JSON.parse(JSON.stringify(this.infissa));
       var espressione = infissa.split("");
       while (espressione[0] !== "=" && espressione.length > 0) {
+        if (this.stack.length === 0) {
+          espressione = this.gestisciNumero(espressione);
+        }
         if (Espressione.isNumero(espressione[0])) {
           espressione = this.gestisciNumero(espressione);
         }
         if (espressione.length > 0 && Espressione.isOperatore(espressione[0])) {
           espressione = this.gestisciOperatore(espressione);
+        }
+        if (this.ultimoInStack() === "(" && espressione[0] === "-") {
+          espressione = this.gestisciNumero(espressione);
         }
       }
       while (this.stack.length > 0) {
@@ -28,6 +34,9 @@ class Espressione {
   gestisciNumero = function(espressioneConNumeroIniziale) {
     let espressione = espressioneConNumeroIniziale;
     let numero = "";
+    if (espressione[0] === "-") {
+      numero += espressione.splice(0, 1);
+    }
     while (espressione.length > 0 && Espressione.isNumero(espressione[0])) {
       numero += espressione.splice(0, 1);
     }
@@ -43,6 +52,9 @@ class Espressione {
       }
       if (espressione.length > 0 && Espressione.isOperatore(espressione[0])) {
         espressione = this.gestisciParentesiAperta(espressione);
+      }
+      if (this.ultimoInStack() === "(" && espressione[0] === "-") {
+        return espressione;
       }
       if (espressione.length > 0 && Espressione.isOperatore(espressione[0])) {
         espressione = this.gestisciOperatoreConPrecedenza(espressione);
@@ -119,6 +131,10 @@ class Espressione {
     return grado;
   }
 
+  ultimoInStack = function() {
+    return this.stack[this.stack.length - 1];
+  }
+
   static isEquilibrata(espressione) {
     let isEquilibrata;
     if (espressione.match(/[(]/g)) {
@@ -157,9 +173,5 @@ class Espressione {
 
   static isParentesiChiusa = function(carattere) {
     return carattere.match(/[)]/);
-  }
-
-  ultimoInStack = function() {
-    return this.stack[this.stack.length - 1];
   }
 }

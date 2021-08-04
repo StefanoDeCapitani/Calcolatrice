@@ -10,7 +10,7 @@ class Calcolatrice {
       let risultato = "";
       while (espressione.length > 0) {
         while (espressione.length > 0 && Espressione.isNumero(espressione[0].toString())) {
-          this.stack.push(espressione.splice(0, 1).join());
+            this.stack.push(espressione.splice(0, 1).join());
         }
         while (espressione.length > 0 && this.stack.length > 0 && Espressione.isOperatore(espressione[0].toString())) {
           this.effettuaOperazione(espressione.splice(0, 1).join());
